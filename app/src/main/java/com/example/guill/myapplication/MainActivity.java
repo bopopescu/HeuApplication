@@ -62,20 +62,31 @@ public class MainActivity extends AppCompatActivity {
         {
             if (requestCode == OPEN_REQUEST_CODE)
             {
-
                 if (resultData != null) {
                     currentUri = resultData.getData();
 
                     try {
-                        String content =
-                                readFileContent(currentUri);
-                        textViewResult.setText(content);
+                        String content = readFileContent(currentUri);
+                        String analyseResult = AnalyseText(content);
+                        System.out.println(analyseResult);
+                        textViewResult.setText(analyseResult);
                     } catch (IOException e) {
                         // Handle error here
+                        e.printStackTrace();
                     }
                 }
             }
         }
+    }
+
+    private String AnalyseText(String myText) {
+        myText = CleanText(myText);
+        System.out.println(myText);
+        return "result";
+    }
+
+    private String CleanText(String myText) {
+        return myText.replaceAll("[-+.^:,]","");
     }
 
 
@@ -93,5 +104,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-
