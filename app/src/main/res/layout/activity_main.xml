@@ -22,10 +22,11 @@
         android:id="@+id/textViewResult"
         android:layout_width="368dp"
         android:layout_height="215dp"
-        android:text="TextView"
+        android:text=""
+        android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@+id/buttonChooseFile"
-        tools:layout_editor_absoluteX="-286dp"
-        android:layout_marginTop="-275dp" />
+        tools:layout_editor_absoluteX="8dp"
+        android:layout_marginTop="0dp" />
 
 
 </android.support.constraint.ConstraintLayout>

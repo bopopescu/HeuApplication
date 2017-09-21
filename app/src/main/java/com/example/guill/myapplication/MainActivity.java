@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,9 +68,20 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
                         String content = readFileContent(currentUri);
-                        String analyseResult = AnalyseText(content);
-                        System.out.println(analyseResult);
-                        textViewResult.setText(analyseResult);
+                        System.out.println(content);
+                        ParseText parseText = new ParseText(content, (double) 960);
+                        double wordsPerMinute = parseText.wordsPerMinute();
+                        ArrayList<Word> list = new ArrayList<Word>();
+                        list = parseText.getMostRepeted(10);
+                        //String analyseResult = AnalyseText(content);
+                        String wordsRepeted = "";
+
+                        for (Word word: list) {
+                            wordsRepeted += word.word + ": " + word.iteration + "\n";
+                        }
+
+                        textViewResult.setText("Mots par minute : " + String.valueOf(wordsPerMinute) + "\n"
+                                + "Mots les plus utilisés : \n" + wordsRepeted);
                     } catch (IOException e) {
                         // Handle error here
                         e.printStackTrace();
