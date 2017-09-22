@@ -68,20 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
                         String content = readFileContent(currentUri);
-                        System.out.println(content);
-                        ParseText parseText = new ParseText(content, (double) 960);
-                        double wordsPerMinute = parseText.wordsPerMinute();
-                        ArrayList<Word> list = new ArrayList<Word>();
-                        list = parseText.getMostRepeted(10);
-                        //String analyseResult = AnalyseText(content);
-                        String wordsRepeted = "";
+                        String tmp = "Mesdames et Messieurs les Chefs d’Etat et de Gouvernement, Si j’ai aujourd'hui le privilège de m’exprimer devant vous, je sais à qui je le dois. Je le dois à tous ceux qui, voici un peu plus de soixante-dix ans, se sont levés contre un régime barbare qui s’était emparé de mon pays, la France.";
+                        tmp = tmp.toLowerCase();
+                        tmp = tmp.replaceAll(Regex.determinant,"").trim();
+                        tmp = tmp.replaceAll(Regex.other,"").trim();
+                        //tmp = tmp.replaceAll(Regex.determinant_apostrophe,)
+                        System.out.println(tmp);
 
-                        for (Word word: list) {
-                            wordsRepeted += word.word + ": " + word.iteration + "\n";
-                        }
-
-                        textViewResult.setText("Mots par minute : " + String.valueOf(wordsPerMinute) + "\n"
-                                + "Mots les plus utilisés : \n" + wordsRepeted);
                     } catch (IOException e) {
                         // Handle error here
                         e.printStackTrace();
@@ -113,6 +106,16 @@ public class MainActivity extends AppCompatActivity {
         }
         inputStream.close();
         return stringBuilder.toString();
+    }
+
+    public int myWordsPerMinute(String text, double duration) {
+        Double time = duration / 60;
+        Double wordsPerMinute = myGetNbWord(text) / time;
+        return wordsPerMinute.intValue();
+    }
+
+    public int myGetNbWord(String text) {
+        return 1;
     }
 
 }
