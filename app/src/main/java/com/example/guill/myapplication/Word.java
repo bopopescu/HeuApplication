@@ -33,4 +33,9 @@ public class Word {
 
         return this.iteration;
     }
+
+    public String getWord() {
+
+        return this.word;
+    }
 }

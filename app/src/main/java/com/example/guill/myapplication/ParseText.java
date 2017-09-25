@@ -2,7 +2,6 @@ package com.example.guill.myapplication;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
 
 /**
  * Created by jeremydebelleix on 20/09/2017.
@@ -11,12 +10,10 @@ import java.util.Hashtable;
 public class ParseText {
 
     String text;
-    String[] textTab;
+    String[] textNoPunctuated;
     Double duration;
 
     ArrayList<Word> wordsList = new ArrayList<Word>();
-
-    Hashtable<String, Integer> table = new Hashtable<String, Integer>();
 
     /*
     **   Constructor
@@ -24,7 +21,7 @@ public class ParseText {
     public ParseText(String myText, Double duration) {
 
         this.text = myText;
-        this.textTab = removePunctuation(myText);
+        this.textNoPunctuated = removePunctuation(myText);
         this.duration = duration;
 
         fillWordTab();
@@ -70,24 +67,17 @@ public class ParseText {
     */
     public void fillWordTab() {
 
-        for(int i = 0; i < this.textTab.length; i++)
-        {
-            String word = this.textTab[i];
+        for(int i = 0; i < this.textNoPunctuated.length; i++) {
+            String string = this.textNoPunctuated[i];
 
-            if(this.table.containsKey(word)) {
-
-                this.table.put(word, this.table.get(word) + 1);
+            for(Word word : this.wordsList) {
+                if(word.getWord().equals(string)) {
+                    word.addIteration();
+                }
+                else {
+                    this.wordsList.add(new Word(string));
+                }
             }
-            else {
-                this.table.put(word, 1);
-            }
-        }
-
-        for (String key: this.table.keySet()) {
-
-            Word word = new Word(key, this.table.get(key));
-
-            this.wordsList.add(word);
         }
 
         Collections.sort(this.wordsList, new CustomComparator());
