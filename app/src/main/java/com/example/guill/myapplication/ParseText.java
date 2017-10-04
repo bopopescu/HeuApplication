@@ -1,5 +1,7 @@
 package com.example.guill.myapplication;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -68,18 +70,22 @@ public class ParseText {
     public void fillWordTab() {
 
         for(int i = 0; i < this.textNoPunctuated.length; i++) {
+
+            boolean contains = false;
             String string = this.textNoPunctuated[i];
 
             for(Word word : this.wordsList) {
                 if(word.getWord().equals(string)) {
                     word.addIteration();
+                    contains = true;
                 }
-                else {
-                    this.wordsList.add(new Word(string));
-                }
+            }
+            if(contains == false) {
+                this.wordsList.add(new Word(string));
             }
         }
 
+        Log.d("word list after fill", ""+ this.wordsList.size());
         Collections.sort(this.wordsList, new CustomComparator());
 
     }
@@ -93,6 +99,7 @@ public class ParseText {
 
         int i = 0;
 
+        Log.d("wordList", " "+ this.wordsList.size());
         while (i < nbr) {
             list.add(this.wordsList.get(i));
             i++;

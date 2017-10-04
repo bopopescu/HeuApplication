@@ -9,11 +9,11 @@
     tools:layout_editor_absoluteX="0dp">
 
     <Button
-        android:id="@+id/buttonChooseFile"
+        android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start recording"
-        android:onClick="startListening"
+        android:onClick="startAnalyze"
 
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -26,9 +26,18 @@
         android:layout_height="215dp"
         android:text=""
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/buttonChooseFile"
+        app:layout_constraintTop_toBottomOf="@+id/startButton"
         tools:layout_editor_absoluteX="8dp"
         android:layout_marginTop="0dp" />
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="358dp"
+        android:layout_height="101dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="77dp" />
 
 </android.support.constraint.ConstraintLayout>
