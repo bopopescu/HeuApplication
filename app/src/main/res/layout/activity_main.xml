@@ -19,12 +19,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.177" />
+        app:layout_constraintVertical_bias="0.133" />
 
     <TextView
         android:id="@+id/textViewResult"
-        android:layout_width="367dp"
-        android:layout_height="372dp"
+        android:layout_width="371dp"
+        android:layout_height="278dp"
         android:text=""
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@+id/startButton"
@@ -39,5 +39,14 @@
         android:inputType="textPersonName"
         tools:layout_editor_absoluteX="13dp"
         tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/recordButton"
+        android:layout_width="108dp"
+        android:layout_height="58dp"
+        android:text="Record"
+        android:onClick="startRecording"
+        tools:layout_editor_absoluteY="412dp"
+        tools:layout_editor_absoluteX="138dp" />
 
 </android.support.constraint.ConstraintLayout>
