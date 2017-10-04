@@ -1,34 +1,33 @@
 package com.example.guill.myapplication;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import android.app.Activity;
-import android.net.Uri;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.EditText;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final int SPEECH_RECOGNITION_CODE = 1;
     private static final int ACTIVITY_CHOOSE_FILE = 3;
     private static final int CREATE_REQUEST_CODE = 40;
     private static final int OPEN_REQUEST_CODE = 41;
     private static final int SAVE_REQUEST_CODE = 42;
 
+    private SpeechRecognizer speechRecognizer;
+    private Intent intent;
+
     Button buttonChooseFile;
-    TextView textViewResult;
+    public TextView textViewResult;
 
 
     @Override
@@ -39,23 +38,49 @@ public class MainActivity extends AppCompatActivity {
         buttonChooseFile = (Button) findViewById(R.id.buttonChooseFile);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
 
-        //Click listener
-        buttonChooseFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent chooseFile;
-                Intent intent;
-                chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-                chooseFile.setType("*/*");
-                intent = Intent.createChooser(chooseFile, "Choose a file");
-                startActivityForResult(intent, OPEN_REQUEST_CODE);
+        initVoiceRecognizer();
 
-            }
-        });
-        //End click listener
     }
 
-    @Override
+    public void startListening(View v) {
+        if (speechRecognizer!=null && buttonChooseFile.isActivated() == true) {
+            speechRecognizer.cancel();
+        }
+        if(buttonChooseFile.isActivated() == false) {
+            speechRecognizer.startListening(intent);
+        }
+        buttonChooseFile.setActivated(!buttonChooseFile.isActivated());
+
+        changeButtonText();
+    }
+
+    private void changeButtonText() {
+        if(buttonChooseFile.isActivated()) {
+            buttonChooseFile.setText("Stop recording");
+        }
+        else {
+            buttonChooseFile.setText("Start recording");
+        }
+    }
+    private SpeechRecognizer getSpeechRecognizer(){
+        if (speechRecognizer == null) {
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+            speechRecognizer.setRecognitionListener(new VoiceListener());
+        }
+        return speechRecognizer;
+    }
+
+    private void initVoiceRecognizer() {
+        speechRecognizer = getSpeechRecognizer();
+        intent = new  Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "fr-FR");
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+    }
+
+
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         Uri currentUri = null;
 
@@ -89,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-    }
+    } */
 
     private String AnalyseText(String myText) {
         myText = CleanText(myText);
@@ -116,3 +141,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+
