@@ -12,7 +12,7 @@ import java.util.Collections;
 public class ParseText {
 
     String text;
-    String[] textNoPunctuated;
+    String[] textClean;
     Double duration;
 
     ArrayList<Word> wordsList = new ArrayList<Word>();
@@ -23,7 +23,7 @@ public class ParseText {
     public ParseText(String myText, Double duration) {
 
         this.text = myText;
-        this.textNoPunctuated = removePunctuation(myText);
+        this.textClean = cleanText(myText);
         this.duration = duration;
 
         fillWordTab();
@@ -31,11 +31,23 @@ public class ParseText {
     }
 
     /*
-    **   Remove the punctuation
+    **   Remove the punctuation, determinant and other useless words
     */
-    public String[] removePunctuation(String text) {
+    public String[] cleanText(String text) {
 
-        String[] words = text.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
+        // Remove determinant and other words
+        text = text.toLowerCase();
+      //  text = text.replaceAll();
+        text = text.replaceAll(Regex.determinant, "");
+        text = text.replaceAll(Regex.other, "");
+
+        Log.e("before replace space", text);
+
+        Log.e("After replace space", text);
+
+        // Create a table of words
+        //String[] words = text.split("\\s+");
+        String[] words = text.replaceAll("[^a-zA-Zéèçêûùàôöï’' ]+", "").split("\\s+");
 
         return words;
     }
@@ -69,10 +81,11 @@ public class ParseText {
     */
     public void fillWordTab() {
 
-        for(int i = 0; i < this.textNoPunctuated.length; i++) {
+        Log.d("textclean", "" + this.textClean);
+        for(int i = 0; i < this.textClean.length; i++) {
 
             boolean contains = false;
-            String string = this.textNoPunctuated[i];
+            String string = this.textClean[i];
 
             for(Word word : this.wordsList) {
                 if(word.getWord().equals(string)) {
@@ -99,9 +112,9 @@ public class ParseText {
 
         int i = 0;
 
-        Log.d("wordList", " "+ this.wordsList.size());
-        while (i < nbr) {
+        while (i < nbr && i < this.wordsList.size()) {
             list.add(this.wordsList.get(i));
+            Log.d("list "+i, "" + this.wordsList.get(i).word);
             i++;
         }
 

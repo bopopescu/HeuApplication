@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         ParseText parseText = new ParseText(this.editText.getText().toString(), (double) 6);
         double wordsPerMinute = parseText.wordsPerMinute();
         ArrayList<Word> list = new ArrayList<Word>();
-        list = parseText.getMostRepeted(3);
+        list = parseText.getMostRepeted(30);
        // String analyseResult = AnalyseText(content);
         String wordsRepeted = "";
 

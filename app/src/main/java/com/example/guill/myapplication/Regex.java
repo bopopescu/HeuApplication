@@ -42,7 +42,6 @@ public class Regex {
             "\\bplusieurs\\b)";
 
     static final String other = "(\\bet\\b|" +
-            "\\best\\b|" +
             "\\bje\\b|" +
             "\\btu\\b|" +
             "\\bil\\b|" +
@@ -53,13 +52,25 @@ public class Regex {
             "\\belles\\b|" +
             "\\bà\\b|" +
             "\\bet\\b|" +
-            "\\bet\\b|" +
-            "\\bet\\b|" +
-            "\\bet\\b|" +
-            "\\bet\\b|" +
-            "\\bet\\b|" +
-            "\\bet\\b|" +
-            "\\bet\\b|" +
-            "\\bet\\b)";
+            "\\bou\\b|" +
+            "\\ben\\b|" +
+            "\\bdans\\b|" +
+            "\\bse\\b|" +
+            "\\bqui\\b|" +
+            "\\bpour\\b|" +
+            "\\bpar\\b|" +
+            "\\ba\\b|" +
+            "\\bau\\b|" +
+            "\\bque\\b|" +
+            "\\bme\\b|" +
+            "\\bon\\b|" +
+            "\\bque\\b|" +
+            "\\bne\\b|" +
+            "\\bsur\\b|" +
+            "\\bque\\b|" +
+            "\\bque\\b|" +
+            "\\bque\\b|" +
+            "\\bque\\b|" +
+            "\\bdu\\b)";
 
 }
