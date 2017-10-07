@@ -2,8 +2,15 @@ package com.example.guill.myapplication;
 
 import android.util.Log;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Created by jeremydebelleix on 20/09/2017.
@@ -148,9 +155,30 @@ public class ParseText {
             list.add(this.onomatopoeiaList.get(i));
             i++;
         }
+        downloadThread.start();
 
         return list;
     }
 
 
+
+    Thread downloadThread = new Thread() {
+        public void run() {
+            try {
+                Document document = Jsoup.connect("http://www.synonymo.fr/synonyme/bonjour").get();
+                String html = document.body().html();
+
+                Pattern pattern = Pattern.compile("consulter les synonymes de ([^\"]*)");
+                Matcher matcher = pattern.matcher(html);
+                while(matcher.find())
+                {
+                    Log.d("synonyme", matcher.group(1));
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
 }
