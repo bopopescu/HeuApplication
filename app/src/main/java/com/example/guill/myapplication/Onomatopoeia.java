@@ -12,6 +12,7 @@ public class Onomatopoeia {
         public static ArrayList<String> list = new ArrayList<String>(Arrays.asList(
                 "bah",
                 "euh",
+                "heu",
                 "ben"
         ));
 }

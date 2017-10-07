@@ -16,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
     Button startButton;
     Button recordButton;
-    public TextView textViewResult;
+    TextView textViewResult;
+    TextView onomatopoeiaTextView;
     EditText editText;
 
     MediaRecorder recorder = new MediaRecorder();
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         recordButton = (Button) findViewById(R.id.recordButton);
         startButton = (Button) findViewById(R.id.startButton);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
+        onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
         editText = (EditText) findViewById(R.id.editText);
 
     }
@@ -46,8 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
         ParseText parseText = new ParseText(this.editText.getText().toString(), (double) 6);
         double wordsPerMinute = parseText.wordsPerMinute();
+
         ArrayList<Word> list = new ArrayList<Word>();
-        list = parseText.getMostRepeted(30);
+        ArrayList<Word> onomatopoeiaList = new ArrayList<Word>();
+
+        list = parseText.getMostRepeted(20);
+        onomatopoeiaList = parseText.getMostRepetedOnomatopoeia(20);
        // String analyseResult = AnalyseText(content);
         String wordsRepeted = "";
 
@@ -57,6 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
         textViewResult.setText("Mots par minute : " + String.valueOf(wordsPerMinute) + "\n"
                 + "Mots les plus utilisés : \n" + wordsRepeted);
+
+        String onomatopoeiaRepeted = "";
+
+        for (Word word: onomatopoeiaList) {
+            onomatopoeiaRepeted += word.word + ": " + word.iteration + "\n";
+        }
+
+        onomatopoeiaTextView.setText("Onomatopées les plus utilisés : \n" + onomatopoeiaRepeted);
     }
 
     private void changeButtonText() {

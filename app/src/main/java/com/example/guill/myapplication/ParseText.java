@@ -77,6 +77,8 @@ public class ParseText {
     */
     public void fillWordTab() {
 
+        Log.d("fill wordtab", "hello");
+
         Log.d("textclean", "" + this.textClean);
         for(int i = 0; i < this.textClean.length; i++) {
 
@@ -104,11 +106,12 @@ public class ParseText {
 
     public void fillOnomatopoeiaList() {
 
+        Log.d("fill onomatopee", "hello");
         for(Word word: this.wordsList) {
 
             if(word.type == WordType.Onomatopoeia) {
                 this.onomatopoeiaList.add(word);
-                this.wordsList.remove(word);
+                //this.wordsList.remove(word);
             }
         }
     }
@@ -117,6 +120,8 @@ public class ParseText {
     **   Get the most repeted word
     */
     public ArrayList<Word> getMostRepeted(int nbr) {
+
+        Log.d("fill onomatopee", "getMostrepeted word");
 
         ArrayList<Word> list = new ArrayList<Word>();
 
@@ -132,6 +137,8 @@ public class ParseText {
     }
 
     public ArrayList<Word> getMostRepetedOnomatopoeia(int nbr) {
+
+        Log.d("fill onomatopee", "getMostrepeted onomatopée");
 
         ArrayList<Word> list = new ArrayList<Word>();
 
