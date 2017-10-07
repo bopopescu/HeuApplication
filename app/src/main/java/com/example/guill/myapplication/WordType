@@ -1,0 +1,6 @@
+package com.example.guill.myapplication;
+
+public enum WordType {
+    Onomatopoeia,
+    Normal;
+}

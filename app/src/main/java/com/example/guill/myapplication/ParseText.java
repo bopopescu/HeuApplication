@@ -16,6 +16,7 @@ public class ParseText {
     Double duration;
 
     ArrayList<Word> wordsList = new ArrayList<Word>();
+    ArrayList<Word> onomatopoeiaList = new ArrayList<Word>();
 
     /*
     **   Constructor
@@ -35,18 +36,13 @@ public class ParseText {
     */
     public String[] cleanText(String text) {
 
-        // Remove determinant and other words
         text = text.toLowerCase();
-      //  text = text.replaceAll();
+
+        // Remove determinant and other words
         text = text.replaceAll(Regex.determinant, "");
         text = text.replaceAll(Regex.other, "");
 
-        Log.e("before replace space", text);
-
-        Log.e("After replace space", text);
-
         // Create a table of words
-        //String[] words = text.split("\\s+");
         String[] words = text.replaceAll("[^a-zA-Zéèçêûùàôöï’' ]+", "").split("\\s+");
 
         return words;
@@ -98,9 +94,23 @@ public class ParseText {
             }
         }
 
+        fillOnomatopoeiaList();
+
         Log.d("word list after fill", ""+ this.wordsList.size());
         Collections.sort(this.wordsList, new CustomComparator());
+        Collections.sort(this.onomatopoeiaList, new CustomComparator());
 
+    }
+
+    public void fillOnomatopoeiaList() {
+
+        for(Word word: this.wordsList) {
+
+            if(word.type == WordType.Onomatopoeia) {
+                this.onomatopoeiaList.add(word);
+                this.wordsList.remove(word);
+            }
+        }
     }
 
     /*
@@ -120,5 +130,20 @@ public class ParseText {
 
         return list;
     }
+
+    public ArrayList<Word> getMostRepetedOnomatopoeia(int nbr) {
+
+        ArrayList<Word> list = new ArrayList<Word>();
+
+        int i = 0;
+
+        while (i < nbr && i < this.onomatopoeiaList.size()) {
+            list.add(this.onomatopoeiaList.get(i));
+            i++;
+        }
+
+        return list;
+    }
+
 
 }
