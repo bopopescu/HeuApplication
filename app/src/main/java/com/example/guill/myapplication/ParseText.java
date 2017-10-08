@@ -2,14 +2,8 @@ package com.example.guill.myapplication;
 
 import android.util.Log;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -135,8 +129,10 @@ public class ParseText {
         int i = 0;
 
         while (i < nbr && i < this.wordsList.size()) {
+           // Word word = this.wordsList.get(i);
+            this.wordsList.get(i).loadSynonymeList();
+            Log.d("get most repeted", "" + this.wordsList.get(i).synonymeList.size());
             list.add(this.wordsList.get(i));
-            Log.d("list "+i, "" + this.wordsList.get(i).word);
             i++;
         }
 
@@ -155,30 +151,8 @@ public class ParseText {
             list.add(this.onomatopoeiaList.get(i));
             i++;
         }
-        downloadThread.start();
 
         return list;
     }
 
-
-
-    Thread downloadThread = new Thread() {
-        public void run() {
-            try {
-                Document document = Jsoup.connect("http://www.synonymo.fr/synonyme/bonjour").get();
-                String html = document.body().html();
-
-                Pattern pattern = Pattern.compile("consulter les synonymes de ([^\"]*)");
-                Matcher matcher = pattern.matcher(html);
-                while(matcher.find())
-                {
-                    Log.d("synonyme", matcher.group(1));
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
 }

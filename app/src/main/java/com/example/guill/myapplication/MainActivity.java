@@ -4,6 +4,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +16,11 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Button startButton;
-    Button recordButton;
+    Button synonymeButton;
+   // Button recordButton;
     TextView textViewResult;
     TextView onomatopoeiaTextView;
+    TextView synonymeTextView;
     EditText editText;
 
     MediaRecorder recorder = new MediaRecorder();
@@ -27,11 +30,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recordButton = (Button) findViewById(R.id.recordButton);
+        //recordButton = (Button) findViewById(R.id.recordButton);
         startButton = (Button) findViewById(R.id.startButton);
+        synonymeButton = (Button) findViewById(R.id.synonymeButton);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
         onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
         editText = (EditText) findViewById(R.id.editText);
+        synonymeTextView = (TextView) findViewById(R.id.synonymeTextView);
+
+        this.synonymeTextView.bringToFront();
+        this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
 
     }
 
@@ -39,9 +47,27 @@ public class MainActivity extends AppCompatActivity {
 
         startButton.setActivated(!startButton.isActivated());
 
-        changeButtonText();
+        //changeButtonText();
 
         analyzeText();
+    }
+
+    public void synonymePressed(View v) {
+
+        if(this.synonymeButton.isActivated() == false) {
+            this.synonymeButton.setText("Hide synonymes");
+            synonymeButton.setActivated(true);
+
+            this.synonymeTextView.setVisibility(this.synonymeTextView.VISIBLE);
+            this.startButton.setVisibility(this.startButton.INVISIBLE);
+
+        }
+        else {
+            this.synonymeButton.setActivated(false);
+            this.synonymeButton.setText("Show synonymes");
+            this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
+            this.startButton.setVisibility(this.startButton.VISIBLE);
+        }
     }
 
     private void analyzeText() {
@@ -52,14 +78,18 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Word> list = new ArrayList<Word>();
         ArrayList<Word> onomatopoeiaList = new ArrayList<Word>();
 
-        list = parseText.getMostRepeted(20);
+        list = parseText.getMostRepeted(5);
         onomatopoeiaList = parseText.getMostRepetedOnomatopoeia(20);
        // String analyseResult = AnalyseText(content);
         String wordsRepeted = "";
-
+        String synonymeText = "SYNONYMES PROPOSÉS";
         for (Word word: list) {
+            Log.d("synonyme list", "" + word.synonymeList.size());
             wordsRepeted += word.word + ": " + word.iteration + "\n";
+            synonymeText += word.getSynonyme();
         }
+
+        synonymeTextView.setText(synonymeText);
 
         textViewResult.setText("Mots par minute : " + String.valueOf(wordsPerMinute) + "\n"
                 + "Mots les plus utilisés : \n" + wordsRepeted);
@@ -71,20 +101,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         onomatopoeiaTextView.setText("Onomatopées les plus utilisés : \n" + onomatopoeiaRepeted);
+
     }
 
-    private void changeButtonText() {
+   /* private void changeButtonText() {
         if(recordButton.isActivated()) {
             recordButton.setText("Stop recording");
         }
         else {
             recordButton.setText("Start recording");
         }
-    }
+    }*/
 
     private void startRecording() {
 
-        changeButtonText();
+       // changeButtonText();
         String status = Environment.getExternalStorageState();
         /*if(status.equals("mounted")){
             String path = your path;
