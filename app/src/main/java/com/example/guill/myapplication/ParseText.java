@@ -1,8 +1,10 @@
 package com.example.guill.myapplication;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+
 
 /**
  * Created by jeremydebelleix on 20/09/2017.
@@ -11,20 +13,19 @@ import java.util.Hashtable;
 public class ParseText {
 
     String text;
-    String[] textTab;
-    Double duration;
+    String[] textClean;
+    double duration;
 
     ArrayList<Word> wordsList = new ArrayList<Word>();
-
-    Hashtable<String, Integer> table = new Hashtable<String, Integer>();
+    ArrayList<Word> onomatopoeiaList = new ArrayList<Word>();
 
     /*
     **   Constructor
     */
-    public ParseText(String myText, Double duration) {
+    public ParseText(String myText, double duration) {
 
         this.text = myText;
-        this.textTab = removePunctuation(myText);
+        this.textClean = cleanText(myText);
         this.duration = duration;
 
         fillWordTab();
@@ -32,11 +33,18 @@ public class ParseText {
     }
 
     /*
-    **   Remove the punctuation
+    **   Remove the punctuation, determinant and other useless words
     */
-    public String[] removePunctuation(String text) {
+    public String[] cleanText(String text) {
 
-        String[] words = text.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
+        text = text.toLowerCase();
+
+        // Remove determinant and other words
+        text = text.replaceAll(Regex.determinant, "");
+        text = text.replaceAll(Regex.other, "");
+
+        // Create a table of words
+        String[] words = text.replaceAll("[^a-zA-Zéèçêûùàôöï’' ]+", "").split("\\s+");
 
         return words;
     }
@@ -56,11 +64,13 @@ public class ParseText {
     /*
     **   Get the number of word per minute
     */
-    public Double wordsPerMinute() {
+    public int wordsPerMinute() {
 
-        Double time = this.duration / 60;
+        double time = this.duration / 60;
 
-        Double wordsPerMinute = getNbWord() / time;
+        Log.d("time", "" + time);
+        int wordsPerMinute = (int) (getNbWord() / time);
+        Log.d("words per minutes", "" + wordsPerMinute);
 
         return wordsPerMinute;
     }
@@ -70,28 +80,43 @@ public class ParseText {
     */
     public void fillWordTab() {
 
-        for(int i = 0; i < this.textTab.length; i++)
-        {
-            String word = this.textTab[i];
+        Log.d("fill wordtab", "hello");
 
-            if(this.table.containsKey(word)) {
+        Log.d("textclean", "" + this.textClean);
+        for(int i = 0; i < this.textClean.length; i++) {
 
-                this.table.put(word, this.table.get(word) + 1);
+            boolean contains = false;
+            String string = this.textClean[i];
+
+            for(Word word : this.wordsList) {
+                if(word.getWord().equals(string)) {
+                    word.addIteration();
+                    contains = true;
+                }
             }
-            else {
-                this.table.put(word, 1);
+            if(contains == false) {
+                this.wordsList.add(new Word(string));
             }
         }
 
-        for (String key: this.table.keySet()) {
+        fillOnomatopoeiaList();
 
-            Word word = new Word(key, this.table.get(key));
-
-            this.wordsList.add(word);
-        }
-
+        Log.d("word list after fill", ""+ this.wordsList.size());
         Collections.sort(this.wordsList, new CustomComparator());
+        Collections.sort(this.onomatopoeiaList, new CustomComparator());
 
+    }
+
+    public void fillOnomatopoeiaList() {
+
+        Log.d("fill onomatopee", "hello");
+        for(Word word: this.wordsList) {
+
+            if(word.type == WordType.Onomatopoeia) {
+                this.onomatopoeiaList.add(word);
+                //this.wordsList.remove(word);
+            }
+        }
     }
 
     /*
@@ -99,12 +124,33 @@ public class ParseText {
     */
     public ArrayList<Word> getMostRepeted(int nbr) {
 
+        Log.d("fill onomatopee", "getMostrepeted word");
+
         ArrayList<Word> list = new ArrayList<Word>();
 
         int i = 0;
 
-        while (i < nbr) {
+        while (i < nbr && i < this.wordsList.size()) {
+           // Word word = this.wordsList.get(i);
+            this.wordsList.get(i).loadSynonymeList();
+            Log.d("get most repeted", "" + this.wordsList.get(i).synonymeList.size());
             list.add(this.wordsList.get(i));
+            i++;
+        }
+
+        return list;
+    }
+
+    public ArrayList<Word> getMostRepetedOnomatopoeia(int nbr) {
+
+        Log.d("fill onomatopee", "getMostrepeted onomatopée");
+
+        ArrayList<Word> list = new ArrayList<Word>();
+
+        int i = 0;
+
+        while (i < nbr && i < this.onomatopoeiaList.size()) {
+            list.add(this.onomatopoeiaList.get(i));
             i++;
         }
 
