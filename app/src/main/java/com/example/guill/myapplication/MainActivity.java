@@ -1,89 +1,100 @@
 package com.example.guill.myapplication;
 
-import android.media.MediaRecorder;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     Button startButton;
     Button synonymeButton;
-   // Button recordButton;
+    Button recordButton;
     TextView textViewResult;
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
-    EditText editText;
 
-    MediaRecorder recorder = new MediaRecorder();
+    Boolean isRecording = false;
+    String speechResult = "";
+
+    long startTime;
+    long stopTime;
+    Double totalTime;
+
+    Intent intent;
+    private static final String TAG = "spk2txtD2";
+
+
+    private SpeechRecognizer speechRecognizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //recordButton = (Button) findViewById(R.id.recordButton);
+        recordButton = (Button) findViewById(R.id.recordButton);
         startButton = (Button) findViewById(R.id.startButton);
         synonymeButton = (Button) findViewById(R.id.synonymeButton);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
         onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
-        editText = (EditText) findViewById(R.id.editText);
         synonymeTextView = (TextView) findViewById(R.id.synonymeTextView);
 
         this.synonymeTextView.bringToFront();
         this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
 
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new listener());
     }
 
     public void startAnalyze(View v) {
 
         startButton.setActivated(!startButton.isActivated());
 
-        //changeButtonText();
-
         analyzeText();
     }
 
     public void synonymePressed(View v) {
 
-        if(this.synonymeButton.isActivated() == false) {
+        if (this.synonymeButton.isActivated() == false) {
             this.synonymeButton.setText("Hide synonymes");
             synonymeButton.setActivated(true);
 
             this.synonymeTextView.setVisibility(this.synonymeTextView.VISIBLE);
             this.startButton.setVisibility(this.startButton.INVISIBLE);
+            this.recordButton.setVisibility(this.recordButton.INVISIBLE);
 
-        }
-        else {
+        } else {
             this.synonymeButton.setActivated(false);
             this.synonymeButton.setText("Show synonymes");
             this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
             this.startButton.setVisibility(this.startButton.VISIBLE);
+            this.recordButton.setVisibility(this.recordButton.VISIBLE);
+
         }
     }
 
     private void analyzeText() {
 
-        ParseText parseText = new ParseText(this.editText.getText().toString(), (double) 6);
-        double wordsPerMinute = parseText.wordsPerMinute();
+        ParseText parseText = new ParseText(speechResult, totalTime);
+        int wordsPerMinute = parseText.wordsPerMinute();
 
         ArrayList<Word> list = new ArrayList<Word>();
         ArrayList<Word> onomatopoeiaList = new ArrayList<Word>();
 
         list = parseText.getMostRepeted(5);
         onomatopoeiaList = parseText.getMostRepetedOnomatopoeia(20);
-       // String analyseResult = AnalyseText(content);
+        // String analyseResult = AnalyseText(content);
         String wordsRepeted = "";
         String synonymeText = "SYNONYMES PROPOSÉS";
-        for (Word word: list) {
+        for (Word word : list) {
             Log.d("synonyme list", "" + word.synonymeList.size());
             wordsRepeted += word.word + ": " + word.iteration + "\n";
             synonymeText += word.getSynonyme();
@@ -96,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         String onomatopoeiaRepeted = "";
 
-        for (Word word: onomatopoeiaList) {
+        for (Word word : onomatopoeiaList) {
             onomatopoeiaRepeted += word.word + ": " + word.iteration + "\n";
         }
 
@@ -104,33 +115,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-   /* private void changeButtonText() {
-        if(recordButton.isActivated()) {
+    private void changeButtonText() {
+        if (recordButton.isActivated()) {
             recordButton.setText("Stop recording");
-        }
-        else {
+        } else {
             recordButton.setText("Start recording");
         }
-    }*/
+    }
+
+    public void manageRecord(View v) {
+        if (isRecording == false) {
+            isRecording = true;
+            recordButton.setText("Stop recording");
+            startTime = System.currentTimeMillis();
+            startRecording();
+        } else {
+            isRecording = false;
+            recordButton.setText("Start recording");
+            stopTime = System.currentTimeMillis();
+
+            totalTime = (double)((stopTime - startTime) / 1000);
+            Log.d("total time", "" + totalTime);
+        }
+    }
 
     private void startRecording() {
 
-       // changeButtonText();
-        String status = Environment.getExternalStorageState();
-        /*if(status.equals("mounted")){
-            String path = your path;
-        }*/
+        speechResult = "";
 
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        recorder.setOutputFile("/sdcard/.voicerecorder/voices");
-        try {
-            recorder.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        recorder.start();
+        intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        //Specify the calling package to identify your application
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
+        //Given an hint to the recognizer about what the user is going to say
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        //specify the max number of results
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+        //User of SpeechRecognizer to "send" the intent.
+        speechRecognizer.startListening(intent);
     }
 
     private String AnalyseText(String myText) {
@@ -140,9 +162,66 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String CleanText(String myText) {
-        return myText.replaceAll("[-+.^:,]","");
+        return myText.replaceAll("[-+.^:,]", "");
     }
 
 
-}
+    @Override
+    public void finish() {
+        speechRecognizer.destroy();
+        speechRecognizer = null;
+        super.finish();
+    }
 
+    class listener implements RecognitionListener {
+        public void onReadyForSpeech(Bundle params)	{
+            Log.d(TAG, "onReadyForSpeech");
+        }
+        public void onBeginningOfSpeech(){
+            Log.d(TAG, "onBeginningOfSpeech");
+        }
+        public void onRmsChanged(float rmsdB){
+            //Log.d(TAG, "onRmsChanged");
+        }
+        public void onBufferReceived(byte[] buffer)	{
+            Log.d(TAG, "onBufferReceived");
+        }
+        public void onEndOfSpeech()	{
+            System.out.println("end of speech");
+            Log.d(TAG, "onEndofSpeech");
+        }
+        public void onError(int error)	{
+            Log.d(TAG,  "error " +  error);
+            if (error == 7) {
+                Log.d(TAG,  "ENTER ERROR 7 " +  "error 7");
+                speechRecognizer.stopListening();
+                speechRecognizer.startListening(intent);
+            }
+        }
+        public void onResults(Bundle results) {
+            Log.d(TAG, "onResults " + results);
+            // Fill the list view with the strings the recognizer thought it could have heard, there should be 5, based on the call
+            ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+
+            Log.d(TAG, "result " + matches.get(0));
+            speechResult = speechResult + matches.get(0);
+            if (isRecording == true) {
+                speechRecognizer.startListening(intent);
+            }
+            else {
+                    System.out.println(speechResult);
+                }
+            }
+        public void onPartialResults(Bundle partialResults)
+        {
+            Log.d(TAG, "onPartialResults");
+            ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            Log.d(TAG, "Partial result " + matches.get(0));
+        }
+        public void onEvent(int eventType, Bundle params)
+        {
+            Log.d(TAG, "onEvent " + eventType);
+        }
+    }
+
+}

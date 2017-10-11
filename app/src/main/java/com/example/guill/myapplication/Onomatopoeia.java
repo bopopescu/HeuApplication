@@ -13,6 +13,8 @@ public class Onomatopoeia {
                 "bah",
                 "euh",
                 "heu",
-                "ben"
+                "ben",
+                "hein",
+                "ba"
         ));
 }

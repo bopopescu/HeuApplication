@@ -6,4 +6,5 @@
     <string name="synonymeTextView" />
     <string name="view_synonymes">View Synonymes</string>
     <string name="start_analyze">Start analyze</string>
+    <string name="recordButton">Start recording</string>
 </resources>
