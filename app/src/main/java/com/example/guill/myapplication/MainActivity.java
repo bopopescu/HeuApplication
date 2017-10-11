@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
+
+        this.startButton.setClickable(false);
+
     }
 
     public void startAnalyze(View v) {
@@ -136,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
             totalTime = (double)((stopTime - startTime) / 1000);
             Log.d("total time", "" + totalTime);
+
+            this.startButton.setClickable(true);
         }
     }
 
