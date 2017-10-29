@@ -2,6 +2,7 @@ package com.example.guill.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button synonymeButton;
     Button recordButton;
+    Chronometer chronometer;
     TextView textViewResult;
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         textViewResult = (TextView) findViewById(R.id.textViewResult);
         onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
         synonymeTextView = (TextView) findViewById(R.id.synonymeTextView);
-
+        chronometer = (Chronometer) findViewById(R.id.chronometer);
         this.synonymeTextView.bringToFront();
         this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
 
@@ -113,12 +116,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void manageRecord(View v) {
+
         if (isRecording == false) {
             isRecording = true;
             recordButton.setText("Stop recording");
             startTime = System.currentTimeMillis();
+
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+
             startRecording();
         } else {
+
+            chronometer.stop();
+
             isRecording = false;
             recordButton.setText("Start recording");
             stopTime = System.currentTimeMillis();
@@ -127,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("total time", "" + totalTime);
 
             // Launch text analyze
+
             analyzeText();
         }
     }
