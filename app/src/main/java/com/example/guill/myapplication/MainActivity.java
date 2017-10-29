@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button startButton;
     Button synonymeButton;
     Button recordButton;
     TextView textViewResult;
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recordButton = (Button) findViewById(R.id.recordButton);
-        startButton = (Button) findViewById(R.id.startButton);
         synonymeButton = (Button) findViewById(R.id.synonymeButton);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
         onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
@@ -54,13 +52,6 @@ public class MainActivity extends AppCompatActivity {
         speechRecognizer.setRecognitionListener(new listener());
     }
 
-    public void startAnalyze(View v) {
-
-        startButton.setActivated(!startButton.isActivated());
-
-        analyzeText();
-    }
-
     public void synonymePressed(View v) {
 
         if (this.synonymeButton.isActivated() == false) {
@@ -68,14 +59,12 @@ public class MainActivity extends AppCompatActivity {
             synonymeButton.setActivated(true);
 
             this.synonymeTextView.setVisibility(this.synonymeTextView.VISIBLE);
-            this.startButton.setVisibility(this.startButton.INVISIBLE);
             this.recordButton.setVisibility(this.recordButton.INVISIBLE);
 
         } else {
             this.synonymeButton.setActivated(false);
             this.synonymeButton.setText("Show synonymes");
             this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
-            this.startButton.setVisibility(this.startButton.VISIBLE);
             this.recordButton.setVisibility(this.recordButton.VISIBLE);
 
         }
@@ -136,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
             totalTime = (double)((stopTime - startTime) / 1000);
             Log.d("total time", "" + totalTime);
+
+            // Launch text analyze
+            analyzeText();
         }
     }
 
