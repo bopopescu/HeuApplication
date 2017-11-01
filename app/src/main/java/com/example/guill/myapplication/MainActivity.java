@@ -13,16 +13,19 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     Button synonymeButton;
-    Button recordButton;
     Chronometer chronometer;
     TextView textViewResult;
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
+    private LottieAnimationView animationView;
+
 
     Boolean isRecording = false;
     String speechResult = "";
@@ -42,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recordButton = (Button) findViewById(R.id.recordButton);
         synonymeButton = (Button) findViewById(R.id.synonymeButton);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
         onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
@@ -51,8 +53,20 @@ public class MainActivity extends AppCompatActivity {
         this.synonymeTextView.bringToFront();
         this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
 
+        animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
+
+       /* ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f)
+                .setDuration(10000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                animationView.setProgress((Float) animation.getAnimatedValue());
+            }
+        });
+        animator.start();*/
     }
 
     public void synonymePressed(View v) {
@@ -62,13 +76,13 @@ public class MainActivity extends AppCompatActivity {
             synonymeButton.setActivated(true);
 
             this.synonymeTextView.setVisibility(this.synonymeTextView.VISIBLE);
-            this.recordButton.setVisibility(this.recordButton.INVISIBLE);
+          //  this.recordButton.setVisibility(this.recordButton.INVISIBLE);
 
         } else {
             this.synonymeButton.setActivated(false);
             this.synonymeButton.setText("Show synonymes");
             this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
-            this.recordButton.setVisibility(this.recordButton.VISIBLE);
+           // this.recordButton.setVisibility(this.recordButton.VISIBLE);
 
         }
     }
@@ -107,19 +121,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void changeButtonText() {
-        if (recordButton.isActivated()) {
-            recordButton.setText("Stop recording");
-        } else {
-            recordButton.setText("Start recording");
-        }
-    }
-
     public void manageRecord(View v) {
 
         if (isRecording == false) {
             isRecording = true;
-            recordButton.setText("Stop recording");
+            //recordButton.setText("Stop recording");
             startTime = System.currentTimeMillis();
 
             chronometer.setBase(SystemClock.elapsedRealtime());
@@ -131,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             chronometer.stop();
 
             isRecording = false;
-            recordButton.setText("Start recording");
+           // recordButton.setText("Start recording");
             stopTime = System.currentTimeMillis();
 
             totalTime = (double)((stopTime - startTime) / 1000);
