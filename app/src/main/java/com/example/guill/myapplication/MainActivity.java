@@ -58,15 +58,6 @@ public class MainActivity extends AppCompatActivity {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
 
-       /* ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f)
-                .setDuration(10000);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                animationView.setProgress((Float) animation.getAnimatedValue());
-            }
-        });
-        animator.start();*/
     }
 
     public void synonymePressed(View v) {
@@ -132,6 +123,11 @@ public class MainActivity extends AppCompatActivity {
             chronometer.start();
 
             startRecording();
+
+            animationView.loop(true);
+            animationView.playAnimation();
+            
+            animationView.loop(true);
         } else {
 
             chronometer.stop();
