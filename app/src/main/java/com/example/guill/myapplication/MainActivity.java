@@ -17,6 +17,8 @@ import com.airbnb.lottie.LottieAnimationView;
 
 import java.util.ArrayList;
 
+import pl.pawelkleczkowski.customgauge.CustomGauge;
+
 public class MainActivity extends AppCompatActivity {
 
     Button synonymeButton;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     TextView synonymeTextView;
     private LottieAnimationView animationView;
     //private LottieAnimationView timerAnimationView;
+    private CustomGauge gauge1;
+
 
     Boolean isRecording = false;
     String speechResult = "";
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         this.synonymeTextView.bringToFront();
         this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
 
+        gauge1 = (CustomGauge) findViewById(R.id.gauge1);
+
         animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
       //  timerAnimationView = (LottieAnimationView) findViewById(R.id.timerAnimationView);
 
@@ -63,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
         chronometer.setTextSize(30);
 
+        gauge1.setEndValue(300);
+        gauge1.setStartValue(20);
+        gauge1.setValue(100);
     }
 
     public void synonymePressed(View v) {

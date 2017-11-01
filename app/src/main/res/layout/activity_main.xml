@@ -96,5 +96,50 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
+    <pl.pawelkleczkowski.customgauge.CustomGauge
+        android:id="@+id/gauge1"
+        android:layout_width="110dp"
+        android:layout_height="117dp"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp"
+        app:gaugePointStartColor="@color/backgroundBlack"
+        app:gaugePointEndColor="@color/backgroundBlack"
+        app:gaugePointSize="6"
+        app:gaugeStartAngle="135"
+        app:gaugeStrokeCap="ROUND"
+        app:gaugeStrokeColor="@color/white"
+        app:gaugeStrokeWidth="10dp"
+        app:gaugeStartValue="0"
+        app:gaugeEndValue="1000"
+        app:gaugeSweepAngle="270"
+        android:layout_marginLeft="248dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="54dp"
+        tools:ignore="RtlHardcoded" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="80dp"
+        android:layout_height="57dp"
+        app:srcCompat="@drawable/kangaroo"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="114dp"
+        android:layout_marginLeft="318dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="49dp"
+        android:layout_height="46dp"
+        app:srcCompat="@drawable/turtle"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="114dp"
+        android:layout_marginLeft="213dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

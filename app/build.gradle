@@ -33,5 +33,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.3'
 
     compile 'com.airbnb.android:lottie:2.2.0'
+    compile 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.3'
 
 }
