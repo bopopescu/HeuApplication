@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
     private LottieAnimationView animationView;
-
+    //private LottieAnimationView timerAnimationView;
 
     Boolean isRecording = false;
     String speechResult = "";
@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     Intent intent;
     private static final String TAG = "spk2txtD2";
-
 
     private SpeechRecognizer speechRecognizer;
 
@@ -54,12 +53,15 @@ public class MainActivity extends AppCompatActivity {
         this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
 
         animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
+      //  timerAnimationView = (LottieAnimationView) findViewById(R.id.timerAnimationView);
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
 
         int background = getApplicationContext().getResources().getColor(R.color.backgroundBlack);
         getWindow().getDecorView().setBackgroundColor(background);
+
+        chronometer.setTextSize(30);
 
     }
 
@@ -129,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
 
             animationView.loop(true);
             animationView.playAnimation();
+
+           // timerAnimationView.loop(true);
+            // timerAnimationView.playAnimation();
+
 
         } else {
 
