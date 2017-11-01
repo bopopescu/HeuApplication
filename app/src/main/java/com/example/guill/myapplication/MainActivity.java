@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
 
+        int background = getApplicationContext().getResources().getColor(R.color.backgroundBlack);
+        getWindow().getDecorView().setBackgroundColor(background);
+
     }
 
     public void synonymePressed(View v) {
@@ -126,8 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             animationView.loop(true);
             animationView.playAnimation();
-            
-            animationView.loop(true);
+
         } else {
 
             chronometer.stop();
@@ -142,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
             // Launch text analyze
 
             analyzeText();
+
+            animationView.loop(false);
         }
     }
 
