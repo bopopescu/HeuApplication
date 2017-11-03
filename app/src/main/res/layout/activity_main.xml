@@ -115,7 +115,7 @@
         app:gaugeStartValue="0"
         app:gaugeEndValue="1000"
         app:gaugeSweepAngle="270"
-        android:layout_marginLeft="248dp"
+        android:layout_marginLeft="258dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="54dp"
@@ -128,7 +128,7 @@
         app:srcCompat="@drawable/kangaroo"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="114dp"
-        android:layout_marginLeft="318dp"
+        android:layout_marginLeft="344dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <ImageView
