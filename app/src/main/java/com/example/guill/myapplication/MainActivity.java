@@ -21,14 +21,15 @@ import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private LottieAnimationView animationView;
+    private Chronometer chronometer;
+    private CustomGauge speedGauge;
+
     Button synonymeButton;
-    Chronometer chronometer;
     TextView textViewResult;
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
-    private LottieAnimationView animationView;
-    //private LottieAnimationView timerAnimationView;
-    private CustomGauge gauge1;
 
 
     Boolean isRecording = false;
@@ -48,30 +49,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        synonymeButton = (Button) findViewById(R.id.synonymeButton);
+        animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
+        chronometer = (Chronometer) findViewById(R.id.chronometer);
+        speedGauge = (CustomGauge) findViewById(R.id.speedGauge);
+
+        /*synonymeButton = (Button) findViewById(R.id.synonymeButton);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
         onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
         synonymeTextView = (TextView) findViewById(R.id.synonymeTextView);
-        chronometer = (Chronometer) findViewById(R.id.chronometer);
         this.synonymeTextView.bringToFront();
-        this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
+        this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);*/
 
-        gauge1 = (CustomGauge) findViewById(R.id.gauge1);
 
-        animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
+
+
       //  timerAnimationView = (LottieAnimationView) findViewById(R.id.timerAnimationView);
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
 
-        int background = getApplicationContext().getResources().getColor(R.color.backgroundBlack);
-        getWindow().getDecorView().setBackgroundColor(background);
-
-        chronometer.setTextSize(30);
-
-        gauge1.setEndValue(300);
-        gauge1.setStartValue(20);
-        gauge1.setValue(100);
+        /*speedGauge.setEndValue(300);
+        speedGauge.setStartValue(20);
+        speedGauge.setValue(100);*/
     }
 
     public void synonymePressed(View v) {
@@ -156,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
             totalTime = (double)((stopTime - startTime) / 1000);
             Log.d("total time", "" + totalTime);
 
+
+            animationView.loop(false);
             // Launch text analyze
 
             analyzeText();
-
-            animationView.loop(false);
         }
     }
 
@@ -242,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onPartialResults");
             ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             Log.d(TAG, "Partial result " + matches.get(0));
+
         }
         public void onEvent(int eventType, Bundle params)
         {
