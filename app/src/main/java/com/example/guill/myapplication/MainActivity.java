@@ -152,11 +152,11 @@ public class MainActivity extends AppCompatActivity {
             totalTime = getTime();
             Log.d("total time", "" + totalTime);
 
-
             animationView.loop(false);
             // Launch text analyze
 
-            startResultActivity();
+            speechRecognizer.stopListening();
+            //startResultActivity();
         }
     }
 
@@ -227,8 +227,8 @@ public class MainActivity extends AppCompatActivity {
         }
         public void onError(int error)	{
             Log.d(TAG,  "error " +  error);
-            if (error == 7) {
-                Log.d(TAG,  "ENTER ERROR 7 " +  "error 7");
+            if (error == 7 || error == 5 || error == 2 || error == 8) {
+                //speechRecognizer.cancel();
                 speechRecognizer.stopListening();
                 speechRecognizer.startListening(intent);
             }
@@ -240,27 +240,37 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d(TAG, "result " + matches.get(0));
             speechResult = speechResult + matches.get(0);
+
             if (isRecording == true) {
                 speechRecognizer.startListening(intent);
             }
             else {
-                    System.out.println(speechResult);
-                }
+
+                System.out.println(speechResult);
+
+                startResultActivity();
+
             }
+        }
+
         public void onPartialResults(Bundle partialResults)
         {
             Log.d(TAG, "onPartialResults");
            // ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             this.matches.add(partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
 
-            Log.d(TAG, "Partial result " + matches.get(0));
+            int time = getTime();
 
-            Log.d("chrono", ""+ chronometer.getBase());
 
-            Log.d("matches", ""+ matches.size());
+            float var = (float)matches.size() / (float) time;
 
-            Log.d("mots par minutes", ""+ matches.size() / (chronometer.getBase() / 60) );
+            float wordsPerMinute = (var * 60);
 
+            Log.d("words var ", ""+ var);
+
+            Log.d("words", ""+ wordsPerMinute);
+            speedGauge.setValue((int)wordsPerMinute);
+            Log.d("word per minute : ", "" + wordsPerMinute);
         }
 
         public void onEvent(int eventType, Bundle params)

@@ -66,14 +66,11 @@ public class ParseText {
     */
     public int wordsPerMinute() {
 
-        double time = this.duration / 60;
+        float var = (float)getNbWord() / (float) duration;
 
-        Log.d("time", "" + time);
+        float wordsPerMinute = (var * 60);
 
-        int wordsPerMinute = (int)((float)(getNbWord() / time)) * 60;
-        Log.d("words per minutes", "" + wordsPerMinute);
-
-        return wordsPerMinute;
+        return (int)wordsPerMinute;
     }
 
     /*

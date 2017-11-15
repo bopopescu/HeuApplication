@@ -44,7 +44,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        app:gaugeEndValue="1000"
+        app:gaugeEndValue="250"
         app:gaugePointEndColor="@color/orange"
         app:gaugePointSize="6"
         app:gaugePointStartColor="@color/orange"
