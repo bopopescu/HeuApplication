@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -110,19 +111,18 @@ public class MainActivity extends AppCompatActivity {
             synonymeText += word.getSynonyme();
         }
 
-        synonymeTextView.setText(synonymeText);
-
-        textViewResult.setText("Mots par minute : " + String.valueOf(wordsPerMinute) + "\n"
-                + "Mots les plus utilisés : \n" + wordsRepeted);
-
         String onomatopoeiaRepeted = "";
 
         for (Word word : onomatopoeiaList) {
             onomatopoeiaRepeted += word.word + ": " + word.iteration + "\n";
         }
 
-        onomatopoeiaTextView.setText("Onomatopées les plus utilisés : \n" + onomatopoeiaRepeted);
-
+        Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+        intent.putExtra("ParseText", (Serializable) parseText);
+        //intent.putExtra("list", list);
+        /*intent.putExtra("onomatopoeiaList", onomatopoeiaList);*/
+        //intent.putExtra("wordsPerMinute", wordsPerMinute);
+        startActivity(intent);
     }
 
     public void manageRecord(View v) {
