@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HeuApplication.iml" filepath="$PROJECT_DIR$/HeuApplication.iml" />
-      <module fileurl="file://D:\Developpement\AndroidStudioProjects\HeuApplication\MyApplication.iml" filepath="D:\Developpement\AndroidStudioProjects\HeuApplication\MyApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyApplication.iml" filepath="$PROJECT_DIR$/MyApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class listener implements RecognitionListener {
+        private ArrayList<ArrayList<String>> matches = new ArrayList<>();
         public void onReadyForSpeech(Bundle params)	{
             Log.d(TAG, "onReadyForSpeech");
         }
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         }
         public void onRmsChanged(float rmsdB){
             //Log.d(TAG, "onRmsChanged");
+
         }
         public void onBufferReceived(byte[] buffer)	{
             Log.d(TAG, "onBufferReceived");
@@ -239,10 +241,21 @@ public class MainActivity extends AppCompatActivity {
         public void onPartialResults(Bundle partialResults)
         {
             Log.d(TAG, "onPartialResults");
-            ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+           // ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            this.matches.add(partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+
+            chronometer.setBase(SystemClock.elapsedRealtime());
+
             Log.d(TAG, "Partial result " + matches.get(0));
 
+            Log.d("chrono", ""+ chronometer.getBase());
+
+            Log.d("matches", ""+ matches.size());
+
+            Log.d("mots par minutes", ""+ matches.size() / (chronometer.getBase() / 60) );
+
         }
+
         public void onEvent(int eventType, Bundle params)
         {
             Log.d(TAG, "onEvent " + eventType);
