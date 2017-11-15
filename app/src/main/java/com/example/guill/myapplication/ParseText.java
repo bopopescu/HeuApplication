@@ -14,7 +14,7 @@ public class ParseText {
 
     String text;
     String[] textClean;
-    double duration;
+    int duration;
 
     ArrayList<Word> wordsList = new ArrayList<Word>();
     ArrayList<Word> onomatopoeiaList = new ArrayList<Word>();
@@ -22,7 +22,7 @@ public class ParseText {
     /*
     **   Constructor
     */
-    public ParseText(String myText, double duration) {
+    public ParseText(String myText, int duration) {
 
         this.text = myText;
         this.textClean = cleanText(myText);
@@ -69,7 +69,8 @@ public class ParseText {
         double time = this.duration / 60;
 
         Log.d("time", "" + time);
-        int wordsPerMinute = (int) (getNbWord() / time);
+
+        int wordsPerMinute = (int)((float)(getNbWord() / time)) * 60;
         Log.d("words per minutes", "" + wordsPerMinute);
 
         return wordsPerMinute;

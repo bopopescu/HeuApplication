@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -36,9 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Boolean isRecording = false;
     String speechResult = "";
 
-    long startTime;
-    long stopTime;
-    Double totalTime;
+    int totalTime;
 
     Intent intent;
     private static final String TAG = "spk2txtD2";
@@ -132,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         if (isRecording == false) {
             isRecording = true;
             //recordButton.setText("Stop recording");
-            startTime = System.currentTimeMillis();
 
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
@@ -152,9 +148,8 @@ public class MainActivity extends AppCompatActivity {
 
             isRecording = false;
            // recordButton.setText("Start recording");
-            stopTime = System.currentTimeMillis();
 
-            totalTime = (double)((stopTime - startTime) / 1000);
+            totalTime = getTime();
             Log.d("total time", "" + totalTime);
 
 
@@ -163,6 +158,17 @@ public class MainActivity extends AppCompatActivity {
 
             startResultActivity();
         }
+    }
+
+    private int getTime() {
+
+        long timeElapsed = SystemClock.elapsedRealtime() - chronometer.getBase();
+
+        int hours = (int) (timeElapsed / 3600000);
+        int minutes = (int) (timeElapsed - hours * 3600000) / 60000;
+        int seconds = (int) (timeElapsed - hours * 3600000 - minutes * 60000) / 1000;
+
+        return seconds;
     }
 
     private void startRecording() {
