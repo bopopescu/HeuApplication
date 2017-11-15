@@ -18,12 +18,12 @@ public class ResultActivity extends AppCompatActivity {
         textViewSpeed = (TextView) findViewById(R.id.textViewSpeed);
 
         String speechResult = getIntent().getStringExtra("speechResult");
-        Double totalTime = getIntent().getDoubleExtra("totalTime", 0);
+        int totalTime = getIntent().getIntExtra("totalTime", 0);
         System.out.println("Result : " + speechResult);
         System.out.println("Total Time : " + totalTime);
 
         ParseText parseText = new ParseText(speechResult, totalTime);
-
+        
         int wordsPerMinute = parseText.wordsPerMinute();
 
 
