@@ -92,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void analyzeText() {
+    private void startResultActivity() {
 
-        ParseText parseText = new ParseText(speechResult, totalTime);
+        /*ParseText parseText = new ParseText(speechResult, totalTime);
         int wordsPerMinute = parseText.wordsPerMinute();
 
         ArrayList<Word> list = new ArrayList<Word>();
@@ -115,10 +115,12 @@ public class MainActivity extends AppCompatActivity {
 
         for (Word word : onomatopoeiaList) {
             onomatopoeiaRepeted += word.word + ": " + word.iteration + "\n";
-        }
+        }*/
 
         Intent intent = new Intent(getBaseContext(), ResultActivity.class);
-        intent.putExtra("ParseText", (Serializable) parseText);
+        //intent.putExtra("ParseText", (Serializable) parseText);
+        intent.putExtra("speechResult", speechResult);
+        intent.putExtra("totalTime", totalTime);
         //intent.putExtra("list", list);
         /*intent.putExtra("onomatopoeiaList", onomatopoeiaList);*/
         //intent.putExtra("wordsPerMinute", wordsPerMinute);
@@ -159,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             animationView.loop(false);
             // Launch text analyze
 
-            analyzeText();
+            startResultActivity();
         }
     }
 
@@ -172,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
         //Given an hint to the recognizer about what the user is going to say
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "fr-FR");
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         //specify the max number of results
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
@@ -243,8 +246,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onPartialResults");
            // ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             this.matches.add(partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
-
-            chronometer.setBase(SystemClock.elapsedRealtime());
 
             Log.d(TAG, "Partial result " + matches.get(0));
 

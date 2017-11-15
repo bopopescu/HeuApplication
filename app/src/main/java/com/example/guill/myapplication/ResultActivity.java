@@ -17,11 +17,22 @@ public class ResultActivity extends AppCompatActivity {
 
         textViewSpeed = (TextView) findViewById(R.id.textViewSpeed);
 
-        //int wordsPerMinute = getIntent().getIntExtra("wordsPerMinute", 0);
-        //ArrayList<Word> list = getIntent().getParcelableArrayListExtra("list");
-        ParseText parseText = (ParseText) getIntent().getSerializableExtra("ParseText");
-        System.out.println(String.valueOf(parseText.wordsPerMinute()));
-        //textViewSpeed.setText("Mots par minute : " + String.valueOf(wordsPerMinute));
+        String speechResult = getIntent().getStringExtra("speechResult");
+        Double totalTime = getIntent().getDoubleExtra("totalTime", 0);
+        System.out.println("Result : " + speechResult);
+        System.out.println("Total Time : " + totalTime);
+
+        ParseText parseText = new ParseText(speechResult, totalTime);
+
+        int wordsPerMinute = parseText.wordsPerMinute();
+
+
+
+
+
+
+
+        textViewSpeed.setText("Mot par minute : " + String.valueOf(wordsPerMinute));
 
     }
 }
