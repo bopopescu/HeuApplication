@@ -15,20 +15,22 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private LottieAnimationView animationView;
+    private Chronometer chronometer;
+    private CustomGauge speedGauge;
+
     Button synonymeButton;
-    Chronometer chronometer;
     TextView textViewResult;
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
-    private LottieAnimationView animationView;
-    //private LottieAnimationView timerAnimationView;
-    private CustomGauge gauge1;
 
 
     Boolean isRecording = false;
@@ -48,30 +50,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        synonymeButton = (Button) findViewById(R.id.synonymeButton);
+        animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
+        chronometer = (Chronometer) findViewById(R.id.chronometer);
+        speedGauge = (CustomGauge) findViewById(R.id.speedGauge);
+
+        /*synonymeButton = (Button) findViewById(R.id.synonymeButton);
         textViewResult = (TextView) findViewById(R.id.textViewResult);
         onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
         synonymeTextView = (TextView) findViewById(R.id.synonymeTextView);
-        chronometer = (Chronometer) findViewById(R.id.chronometer);
         this.synonymeTextView.bringToFront();
-        this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
+        this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);*/
 
-        gauge1 = (CustomGauge) findViewById(R.id.gauge1);
 
-        animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
+
+
       //  timerAnimationView = (LottieAnimationView) findViewById(R.id.timerAnimationView);
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
 
-        int background = getApplicationContext().getResources().getColor(R.color.backgroundBlack);
-        getWindow().getDecorView().setBackgroundColor(background);
-
-        chronometer.setTextSize(30);
-
-        gauge1.setEndValue(300);
-        gauge1.setStartValue(20);
-        gauge1.setValue(100);
+        /*speedGauge.setEndValue(300);
+        speedGauge.setStartValue(20);
+        speedGauge.setValue(100);*/
     }
 
     public void synonymePressed(View v) {
@@ -111,19 +111,18 @@ public class MainActivity extends AppCompatActivity {
             synonymeText += word.getSynonyme();
         }
 
-        synonymeTextView.setText(synonymeText);
-
-        textViewResult.setText("Mots par minute : " + String.valueOf(wordsPerMinute) + "\n"
-                + "Mots les plus utilisés : \n" + wordsRepeted);
-
         String onomatopoeiaRepeted = "";
 
         for (Word word : onomatopoeiaList) {
             onomatopoeiaRepeted += word.word + ": " + word.iteration + "\n";
         }
 
-        onomatopoeiaTextView.setText("Onomatopées les plus utilisés : \n" + onomatopoeiaRepeted);
-
+        Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+        intent.putExtra("ParseText", (Serializable) parseText);
+        //intent.putExtra("list", list);
+        /*intent.putExtra("onomatopoeiaList", onomatopoeiaList);*/
+        //intent.putExtra("wordsPerMinute", wordsPerMinute);
+        startActivity(intent);
     }
 
     public void manageRecord(View v) {
@@ -156,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
             totalTime = (double)((stopTime - startTime) / 1000);
             Log.d("total time", "" + totalTime);
 
+
+            animationView.loop(false);
             // Launch text analyze
 
             analyzeText();
-
-            animationView.loop(false);
         }
     }
 
@@ -199,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class listener implements RecognitionListener {
+        private ArrayList<ArrayList<String>> matches = new ArrayList<>();
         public void onReadyForSpeech(Bundle params)	{
             Log.d(TAG, "onReadyForSpeech");
         }
@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         }
         public void onRmsChanged(float rmsdB){
             //Log.d(TAG, "onRmsChanged");
+
         }
         public void onBufferReceived(byte[] buffer)	{
             Log.d(TAG, "onBufferReceived");
@@ -240,9 +241,21 @@ public class MainActivity extends AppCompatActivity {
         public void onPartialResults(Bundle partialResults)
         {
             Log.d(TAG, "onPartialResults");
-            ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+           // ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            this.matches.add(partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+
+            chronometer.setBase(SystemClock.elapsedRealtime());
+
             Log.d(TAG, "Partial result " + matches.get(0));
+
+            Log.d("chrono", ""+ chronometer.getBase());
+
+            Log.d("matches", ""+ matches.size());
+
+            Log.d("mots par minutes", ""+ matches.size() / (chronometer.getBase() / 60) );
+
         }
+
         public void onEvent(int eventType, Bundle params)
         {
             Log.d(TAG, "onEvent " + eventType);
