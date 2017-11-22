@@ -2,6 +2,7 @@ package com.example.guill.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -15,6 +16,10 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -88,9 +93,43 @@ public class MainActivity extends AppCompatActivity {
             this.synonymeButton.setText("Show synonymes");
             this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
            // this.recordButton.setVisibility(this.recordButton.VISIBLE);
-
+            createJson(this.speechResult);
         }
     }
+
+    public void createJson(String mJsonResponse) {
+
+        String content = "hello world";
+        File file;
+        FileOutputStream outputStream;
+        try {
+            // file = File.createTempFile("MyCache", null, getCacheDir());
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "hello.json");
+
+            Log.d("file", ""+ file.getAbsolutePath());
+            outputStream = new FileOutputStream(file);
+            outputStream.write(content.getBytes());
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void mReadJsonData(String params) {
+        try {
+            File f = new File("/data/data/" + getPackageName() + "/" + params);
+            FileInputStream is = new FileInputStream(f);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String mResponse = new String(buffer);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 
     private void analyzeText() {
 
