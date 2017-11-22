@@ -47,8 +47,8 @@ public class ResultActivity extends AppCompatActivity {
         /*
         * Get var from last activity
         * */
-        String speechResult = getIntent().getStringExtra("speechResult");
-        int totalTime = getIntent().getIntExtra("totalTime", 0);
+        final String speechResult = getIntent().getStringExtra("speechResult");
+        final int totalTime = getIntent().getIntExtra("totalTime", 0);
 
 
         /*
@@ -132,7 +132,7 @@ public class ResultActivity extends AppCompatActivity {
         buttonSaveText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveText();
+                saveText(speechResult, totalTime);
             }
         });
 
@@ -142,8 +142,12 @@ public class ResultActivity extends AppCompatActivity {
         System.out.println("see text");
     }
 
-    public void saveText() {
+    public void saveText(String speechResult, int totalTime) {
         System.out.println("save text");
+        String name = "record123";
+        Historic historic = new Historic();
+        historic.writeJson(name, "historic_heu.json", speechResult, totalTime);
+        Toast.makeText(getBaseContext(), "C'est bon !", Toast.LENGTH_LONG).show();
     }
 
 

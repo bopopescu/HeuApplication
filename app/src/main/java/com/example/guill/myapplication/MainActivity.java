@@ -228,13 +228,17 @@ public class MainActivity extends AppCompatActivity {
            // ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             this.matches.add(partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
 
-            Log.d(TAG, "Partial result " + matches.get(0));
+            int time = getTime();
 
-            Log.d("chrono", ""+ chronometer.getBase());
+            float var = (float)matches.size() / (float) time;
 
-            Log.d("matches", ""+ matches.size());
+            float wordsPerMinute = (var * 60);
 
-            Log.d("mots par minutes", ""+ matches.size() / (chronometer.getBase() / 60) );
+            Log.d("words var ", ""+ var);
+
+            Log.d("words", ""+ wordsPerMinute);
+            speedGauge.setValue((int)wordsPerMinute);
+            Log.d("word per minute : ", "" + wordsPerMinute);
 
         }
 
