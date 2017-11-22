@@ -36,7 +36,6 @@ public class ParseText {
     **   Remove the punctuation, determinant and other useless words
     */
     public String[] cleanText(String text) {
-
         text = text.toLowerCase();
 
         // Remove determinant and other words
@@ -66,11 +65,7 @@ public class ParseText {
     */
     public int wordsPerMinute() {
 
-        double time = this.duration / 60;
-
-        Log.d("time", "" + time);
-
-        int wordsPerMinute = (int)((float)(getNbWord() / time)) * 60;
+        int wordsPerMinute = (int)((float)(getNbWord() / this.duration)) * 60;
         Log.d("words per minutes", "" + wordsPerMinute);
 
         return wordsPerMinute;

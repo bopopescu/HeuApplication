@@ -51,27 +51,14 @@ public class MainActivity extends AppCompatActivity {
         chronometer = (Chronometer) findViewById(R.id.chronometer);
         speedGauge = (CustomGauge) findViewById(R.id.speedGauge);
 
-        /*synonymeButton = (Button) findViewById(R.id.synonymeButton);
-        textViewResult = (TextView) findViewById(R.id.textViewResult);
-        onomatopoeiaTextView = (TextView) findViewById(R.id.onomatopoeiaTextView);
-        synonymeTextView = (TextView) findViewById(R.id.synonymeTextView);
-        this.synonymeTextView.bringToFront();
-        this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);*/
-
-
-
-
-      //  timerAnimationView = (LottieAnimationView) findViewById(R.id.timerAnimationView);
-
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(new listener());
 
-        /*speedGauge.setEndValue(300);
-        speedGauge.setStartValue(20);
-        speedGauge.setValue(100);*/
+        speechResult = "";
+
     }
 
-    public void synonymePressed(View v) {
+    /*public void synonymePressed(View v) {
 
         if (this.synonymeButton.isActivated() == false) {
             this.synonymeButton.setText("Hide synonymes");
@@ -87,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
            // this.recordButton.setVisibility(this.recordButton.VISIBLE);
 
         }
-    }
+    }*/
 
     private void startResultActivity() {
 
@@ -133,30 +120,26 @@ public class MainActivity extends AppCompatActivity {
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
 
-            startRecording();
-
             animationView.loop(true);
             animationView.playAnimation();
 
-           // timerAnimationView.loop(true);
-            // timerAnimationView.playAnimation();
-
-
-        } else {
-
+            startRecording();
+        }
+        else {
             chronometer.stop();
 
-            isRecording = false;
-           // recordButton.setText("Start recording");
-
             totalTime = getTime();
-            Log.d("total time", "" + totalTime);
-
 
             animationView.loop(false);
-            // Launch text analyze
 
+            isRecording = false;
+
+            finish();
+            System.out.println("Before start Result activity :");
+            System.out.println(speechResult);
+            speechResult = "Permettez-moi euh euh euh d’abord, avant euh ben toute chose, cet après-midi, d’avoir ben une pensée pour nos deux compatriotes qui ont été lâchement assassinées hier à Marseille. Il est encore trop tôt pour qualifier avec la certitude requise ce qui s’est passé et le ministre de l’Intérieur aura à le faire dans les prochaines heures. Et d’avoir dans le même temps, puisque nous sommes ici plongés au cœur du vaste monde à travers votre représentation, une pensée également émue pour nos amis américains qui ont eu à subir, eux aussi, la violence contemporaine à Las Vegas, il y a quelques heures.";
             startResultActivity();
+
         }
     }
 
@@ -172,9 +155,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRecording() {
-
-        speechResult = "";
-
         intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         //Specify the calling package to identify your application
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
@@ -188,22 +168,15 @@ public class MainActivity extends AppCompatActivity {
         speechRecognizer.startListening(intent);
     }
 
-    private String AnalyseText(String myText) {
-        myText = CleanText(myText);
-        System.out.println(myText);
-        return "result";
-    }
-
     private String CleanText(String myText) {
         return myText.replaceAll("[-+.^:,]", "");
     }
 
-
     @Override
     public void finish() {
+        System.out.println("Enter in finish");
         speechRecognizer.destroy();
-        speechRecognizer = null;
-        super.finish();
+        //super.finish();
     }
 
     class listener implements RecognitionListener {
@@ -214,10 +187,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBeginningOfSpeech(){
             Log.d(TAG, "onBeginningOfSpeech");
         }
-        public void onRmsChanged(float rmsdB){
-            //Log.d(TAG, "onRmsChanged");
-
-        }
+        public void onRmsChanged(float rmsdB){}
         public void onBufferReceived(byte[] buffer)	{
             Log.d(TAG, "onBufferReceived");
         }
@@ -227,10 +197,15 @@ public class MainActivity extends AppCompatActivity {
         }
         public void onError(int error)	{
             Log.d(TAG,  "error " +  error);
-            if (error == 7) {
-                Log.d(TAG,  "ENTER ERROR 7 " +  "error 7");
+            if (error == 7 || error == 5 || error == 2 || error == 6) {
+                Log.d(TAG,  "ENTER ERROR");
                 speechRecognizer.stopListening();
                 speechRecognizer.startListening(intent);
+            }
+            if (error == 8) {
+                Log.d(TAG,  "ENTER ERROR 8");
+                finish();
+                startRecording();
             }
         }
         public void onResults(Bundle results) {
@@ -244,9 +219,9 @@ public class MainActivity extends AppCompatActivity {
                 speechRecognizer.startListening(intent);
             }
             else {
-                    System.out.println(speechResult);
-                }
+                finish();
             }
+        }
         public void onPartialResults(Bundle partialResults)
         {
             Log.d(TAG, "onPartialResults");

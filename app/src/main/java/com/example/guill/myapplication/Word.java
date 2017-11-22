@@ -134,14 +134,8 @@ public class Word {
         }
     };
 
-    public String getSynonyme() {
-
-        String result = "\n\nSynonyme de " + this.word + ":\n";
-        for(String synonyme: this.synonymeList) {
-            result += " " + synonyme;
-        }
-
-        return result;
+    public ArrayList<String> getSynonymeList() {
+        return this.synonymeList;
     }
 
 }
