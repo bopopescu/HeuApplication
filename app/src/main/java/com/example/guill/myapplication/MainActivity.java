@@ -26,11 +26,12 @@ public class MainActivity extends AppCompatActivity {
     private Chronometer chronometer;
     private CustomGauge speedGauge;
 
+    int nbWords = 0;
+
     Button synonymeButton;
     TextView textViewResult;
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
-
 
     Boolean isRecording = false;
     String speechResult = "";
@@ -50,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
         animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
         chronometer = (Chronometer) findViewById(R.id.chronometer);
         speedGauge = (CustomGauge) findViewById(R.id.speedGauge);
-
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizer.setRecognitionListener(new listener());
 
         speechResult = "";
 
@@ -101,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
             onomatopoeiaRepeted += word.word + ": " + word.iteration + "\n";
         }*/
 
+        this.nbWords = 0;
+
         Intent intent = new Intent(getBaseContext(), ResultActivity.class);
         //intent.putExtra("ParseText", (Serializable) parseText);
         intent.putExtra("speechResult", speechResult);
@@ -135,9 +135,9 @@ public class MainActivity extends AppCompatActivity {
             isRecording = false;
 
             finish();
-            System.out.println("Before start Result activity :");
-            System.out.println(speechResult);
-            speechResult = "Permettez-moi euh euh euh d’abord, avant euh ben toute chose, cet après-midi, d’avoir ben une pensée pour nos deux compatriotes qui ont été lâchement assassinées hier à Marseille. Il est encore trop tôt pour qualifier avec la certitude requise ce qui s’est passé et le ministre de l’Intérieur aura à le faire dans les prochaines heures. Et d’avoir dans le même temps, puisque nous sommes ici plongés au cœur du vaste monde à travers votre représentation, une pensée également émue pour nos amis américains qui ont eu à subir, eux aussi, la violence contemporaine à Las Vegas, il y a quelques heures.";
+
+            Log.d("before result activity", "" + speechResult);
+           // speechResult = "Permettez-moi euh euh euh d’abord, avant euh ben toute chose, cet après-midi, d’avoir ben une pensée pour nos deux compatriotes qui ont été lâchement assassinées hier à Marseille. Il est encore trop tôt pour qualifier avec la certitude requise ce qui s’est passé et le ministre de l’Intérieur aura à le faire dans les prochaines heures. Et d’avoir dans le même temps, puisque nous sommes ici plongés au cœur du vaste monde à travers votre représentation, une pensée également émue pour nos amis américains qui ont eu à subir, eux aussi, la violence contemporaine à Las Vegas, il y a quelques heures.";
             startResultActivity();
 
         }
@@ -147,14 +147,15 @@ public class MainActivity extends AppCompatActivity {
 
         long timeElapsed = SystemClock.elapsedRealtime() - chronometer.getBase();
 
-        int hours = (int) (timeElapsed / 3600000);
-        int minutes = (int) (timeElapsed - hours * 3600000) / 60000;
-        int seconds = (int) (timeElapsed - hours * 3600000 - minutes * 60000) / 1000;
+        int seconds = (int) timeElapsed / 1000;
 
         return seconds;
     }
 
     private void startRecording() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new listener(this));
+
         intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         //Specify the calling package to identify your application
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
@@ -180,6 +181,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class listener implements RecognitionListener {
+
+        private MainActivity activity;
+
+        public listener(MainActivity activity) {
+            this.activity = activity;
+        }
+
         private ArrayList<ArrayList<String>> matches = new ArrayList<>();
         public void onReadyForSpeech(Bundle params)	{
             Log.d(TAG, "onReadyForSpeech");
@@ -228,17 +236,26 @@ public class MainActivity extends AppCompatActivity {
            // ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             this.matches.add(partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
 
-            int time = getTime();
+            if (matches.size() > this.activity.nbWords) {
+                this.activity.nbWords = this.matches.size();
+            }
 
-            float var = (float)matches.size() / (float) time;
+            int time = getTime();
+            Log.d("calc time", ""+ time);
+            Log.d("calc chrono", "" + chronometer.getBase());
+            Log.d("calc real time", "" + SystemClock.elapsedRealtime());
+
+           // Log.d("calcul time", "" );
+
+            float var = (float)this.activity.nbWords / (float) time;
+
+            Log.d("activity nb word", "" + activity.nbWords);
+            Log.d("calc var", ""+ var);
 
             float wordsPerMinute = (var * 60);
+            Log.d("calc wordsperminute", ""+ wordsPerMinute);
 
-            Log.d("words var ", ""+ var);
-
-            Log.d("words", ""+ wordsPerMinute);
             speedGauge.setValue((int)wordsPerMinute);
-            Log.d("word per minute : ", "" + wordsPerMinute);
 
         }
 
