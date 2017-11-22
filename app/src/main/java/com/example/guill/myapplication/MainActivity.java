@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -92,44 +95,124 @@ public class MainActivity extends AppCompatActivity {
             this.synonymeButton.setActivated(false);
             this.synonymeButton.setText("Show synonymes");
             this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
-           // this.recordButton.setVisibility(this.recordButton.VISIBLE);
-            createJson(this.speechResult);
+
+
+            writeJson("hello.json", "hello");
         }
     }
 
-    public void createJson(String mJsonResponse) {
+    public void writeJson(String filename, String content) {
 
-        String content = "hello world";
-        File file;
         FileOutputStream outputStream;
-        try {
-            // file = File.createTempFile("MyCache", null, getCacheDir());
-            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "hello.json");
 
-            Log.d("file", ""+ file.getAbsolutePath());
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+        String oldContent = getJson(filename);
+
+        try {
             outputStream = new FileOutputStream(file);
-            outputStream.write(content.getBytes());
-            outputStream.close();
-        } catch (IOException e) {
+
+            // json file empty
+           if (oldContent == null) {
+               // outputStream.write(jsonString.getBytes());
+               JSONObject main = new JSONObject();
+               JSONObject json = new JSONObject();
+
+               json.put("first test", "1 test");
+               json.put("second test", "2 test");
+
+               main.put("FIRST", json);
+
+               String jsonContent = main.toString();
+
+               outputStream.write(jsonContent.getBytes());
+           }
+           else {
+               JSONObject main = new JSONObject(oldContent);
+
+               JSONObject jsonStringObject = new JSONObject();
+
+               jsonStringObject.put("test1", "new test");
+               jsonStringObject.put("test2", "new test 2");
+
+               main.put("new object", jsonStringObject);
+
+               // get json value
+               JSONObject mainObject = main.getJSONObject("new object");
+
+               Log.d("main json", "" + mainObject.get("test1"));
+
+               String jsonContent = main.toString();
+
+               outputStream.write(jsonContent.getBytes());
+           }
+
+           outputStream.close();
+        }
+        catch (IOException e) {
+
+        } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
-    public void mReadJsonData(String params) {
+    public String getJson(String filename) {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+        String content = null;
+
         try {
-            File f = new File("/data/data/" + getPackageName() + "/" + params);
-            FileInputStream is = new FileInputStream(f);
+           FileInputStream is = new FileInputStream(file);
+
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            String mResponse = new String(buffer);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+
+            content = new String(buffer, "UTF-8");
+
+            Log.d("json constent: ", "" + content);
+
+            return content;
+        }
+        catch (IOException e) {
+
+        }
+        return content;
+
+    }
+   /* public JSONObject getJson(String filename) {
+
+        String content = null;
+
+        JSONObject json = null;
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+        try {
+
+            FileInputStream is = new FileInputStream(file);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            content = new String(buffer, "UTF-8");
+
+            json = new JSONObject(content);
+
+            Log.d("json", ""+ json);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return json;
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
 
+        return json;
+    }*/
 
     private void analyzeText() {
 
