@@ -22,6 +22,7 @@ android {
 }
 
 
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -35,5 +36,7 @@ dependencies {
 
     compile 'com.airbnb.android:lottie:2.2.0'
     compile 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.3'
+    compile 'com.github.pchmn:MaterialChipsInput:1.0.8'
+    compile 'com.google.android:flexbox:0.1.3'
 
 }
