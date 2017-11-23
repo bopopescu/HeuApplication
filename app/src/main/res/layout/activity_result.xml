@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Cliquer sur un mot pour voir ses synonymes"
+        android:text="Cliquez sur un mot pour voir ses synonymes"
         android:textAlignment="center"
         android:textStyle="italic"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -1,17 +1,21 @@
 package com.example.guill.myapplication;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import com.airbnb.lottie.LottieAnimationView;
 
@@ -32,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewResult;
     TextView onomatopoeiaTextView;
     TextView synonymeTextView;
+    Toolbar toolbar;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle drawerToggle;
 
     Boolean isRecording = false;
     String speechResult = "";
@@ -48,12 +55,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         animationView = (LottieAnimationView) findViewById(R.id.lottieAnimationView);
         chronometer = (Chronometer) findViewById(R.id.chronometer);
         speedGauge = (CustomGauge) findViewById(R.id.speedGauge);
 
+        //definir notre toolbar en tant qu'actionBar
+        setSupportActionBar(toolbar);
+
+        //afficher le bouton retour
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, 0, 0);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+
         speechResult = "";
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     /*public void synonymePressed(View v) {

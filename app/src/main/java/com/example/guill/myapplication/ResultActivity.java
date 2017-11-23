@@ -147,7 +147,7 @@ public class ResultActivity extends AppCompatActivity {
         String name = "record123";
         Historic historic = new Historic();
         historic.writeJson(name, "historic_heu.json", speechResult, totalTime);
-        Toast.makeText(getBaseContext(), "C'est bon !", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "C'est fait !", Toast.LENGTH_LONG).show();
     }
 
 
