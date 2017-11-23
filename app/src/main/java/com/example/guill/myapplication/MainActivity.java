@@ -129,7 +129,9 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         this.nbWords = 0;
-
+        speechResult = "Ce n’est pas cet amphithéâtre qui fait que La Sorbonne heu existe. Si elle vit aujourd’hui, heu c’est de l’idée que ses professeurs et ses élèves se font du savoir : une idée dont la vigueur a déjà traversé huit siècles. L’Europe aussi est une idée. Une idée portée depuis des siècles par des pionniers, des optimistes, des visionnaires, et que sans cesse, il nous appartient de nous réapproprier. Car les plus belles idées, celles qui nous font avancer, qui améliorent le sort des hommes sont toujours fragiles. Et l’Europe ne vivra que par l’idée que nous nous en faisons. A nous de la vivifier, de la rendre toujours plus belle et plus forte, de ne pas nous laisser arrêter par la forme que lui donnent les circonstances historiques. Car cette forme passe, mais l’idée demeure, et son ambition doit être la nôtre.\n" +
+                "Vivre collégialement, heu c’était l’idéal de Robert de SORBON. Et de partout affluaient les intellectuels et les érudits qui allaient forger la pensée européenne. A travers les guerres et les crises, à travers toutes ces péripéties de l’Histoire qui ont frappé l’Europe, cette pensée n’a cessé de grandir, de rayonner. Et là où le chaos aurait pu triompher, la civilisation, toujours, l’a emporté.\n" +
+                "Nous sommes les héritiers de toute bah cette histoire. Nous sommes heu les bah héritiers de deux déflagrations bah qui auraient dû jeter la nuit sur notre Europe, celles du siècle passé, des deux guerres mondiales qui ont décimé l’Europe et auraient pu nous engloutir. Mais ensemble, nous avons surmonté l’épreuve sans jamais en oublier les leçons. L’idée a triomphé des ruines. Le désir de fraternité a été plus fort que la vengeance et la haine.";
         Intent intent = new Intent(getBaseContext(), ResultActivity.class);
         //intent.putExtra("ParseText", (Serializable) parseText);
         intent.putExtra("speechResult", speechResult);
