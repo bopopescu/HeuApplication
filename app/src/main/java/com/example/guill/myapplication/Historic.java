@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by jeremydebelleix on 22/11/2017.
@@ -80,5 +82,67 @@ public class Historic {
         }
         return content;
 
+    }
+
+    public ArrayList<String> getRecords(String filename) {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+        FileOutputStream outputStream;
+
+        String content = getJsonString(filename);
+
+        ArrayList<String> list = new ArrayList<String>();
+
+        try {
+            JSONObject main = new JSONObject(content);
+
+            Iterator<?> keys = main.keys();
+
+            while( keys.hasNext() ) {
+                String key = (String)keys.next();
+
+                list.add(key);
+
+                Log.d("key", ""+ key);
+                if ( main.get(key) instanceof JSONObject ) {
+                    Log.d("key", ""+ main.get(key));
+                }
+            }
+
+            return list;
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+
+    }
+
+    public String getValue(String filename, String recordName, String key) {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+
+        FileOutputStream outputStream;
+
+        String content = getJsonString(filename);
+
+        String value = null;
+
+        try {
+            JSONObject main = new JSONObject(content);
+            JSONObject object = new JSONObject();
+
+            object = main.getJSONObject(recordName);
+
+            value = object.getString(key);
+
+            return value;
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return value;
     }
 }

@@ -3,6 +3,7 @@ package com.example.guill.myapplication;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -14,11 +15,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -32,13 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
     int nbWords = 0;
 
-    Button synonymeButton;
-    TextView textViewResult;
-    TextView onomatopoeiaTextView;
-    TextView synonymeTextView;
     Toolbar toolbar;
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle drawerToggle;
+    LinearLayout contentDrawer;
 
     Boolean isRecording = false;
     String speechResult = "";
@@ -73,9 +79,11 @@ public class MainActivity extends AppCompatActivity {
                 this, drawerLayout, toolbar, 0, 0);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+        contentDrawer = (LinearLayout) findViewById(R.id.contentDrawer);
 
 
         speechResult = "";
+        listHistoric();
 
     }
 
@@ -85,60 +93,40 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /*public void synonymePressed(View v) {
-
-        if (this.synonymeButton.isActivated() == false) {
-            this.synonymeButton.setText("Hide synonymes");
-            synonymeButton.setActivated(true);
-
-            this.synonymeTextView.setVisibility(this.synonymeTextView.VISIBLE);
-          //  this.recordButton.setVisibility(this.recordButton.INVISIBLE);
-
-        } else {
-            this.synonymeButton.setActivated(false);
-            this.synonymeButton.setText("Show synonymes");
-            this.synonymeTextView.setVisibility(this.synonymeTextView.INVISIBLE);
-           // this.recordButton.setVisibility(this.recordButton.VISIBLE);
-
+    private void listHistoric() {
+        TextView textViewRecordHistoricTitle = new TextView(MainActivity.this);
+        textViewRecordHistoricTitle.setText("Mes enregistrement");
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        llp.setMargins(0, 20, 0, 0); // llp.setMargins(left, top, right, bottom);
+        textViewRecordHistoricTitle.setLayoutParams(llp);
+        textViewRecordHistoricTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        contentDrawer.addView(textViewRecordHistoricTitle);
+        final Historic historic = new Historic();
+        ArrayList<String> list = historic.getRecords("historic_heu.json");
+        for (final String recordName: list) {
+            final TextView textViewRecordHistoric = new TextView(MainActivity.this);
+            textViewRecordHistoric.setText(recordName);
+            textViewRecordHistoric.setPadding(20, 20, 0, 0);
+            contentDrawer.addView(textViewRecordHistoric);
+            textViewRecordHistoric.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), ResultActivity.class);
+                    String speechResult2 = historic.getValue("historic_heu.json", textViewRecordHistoric.getText().toString(), "text");
+                    intent.putExtra("speechResult", speechResult2);
+                    int totalTime2 = Integer.parseInt(historic.getValue("historic_heu.json", textViewRecordHistoric.getText().toString(), "time"));
+                    intent.putExtra("totalTime", totalTime2);
+                    startActivity(intent);
+                }
+            });
         }
-    }*/
+    }
 
     private void startResultActivity() {
-
-        /*ParseText parseText = new ParseText(speechResult, totalTime);
-        int wordsPerMinute = parseText.wordsPerMinute();
-
-        ArrayList<Word> list = new ArrayList<Word>();
-        ArrayList<Word> onomatopoeiaList = new ArrayList<Word>();
-
-        list = parseText.getMostRepeted(5);
-        onomatopoeiaList = parseText.getMostRepetedOnomatopoeia(20);
-        // String analyseResult = AnalyseText(content);
-        String wordsRepeted = "";
-        String synonymeText = "SYNONYMES PROPOSÉS";
-        for (Word word : list) {
-            Log.d("synonyme list", "" + word.synonymeList.size());
-            wordsRepeted += word.word + ": " + word.iteration + "\n";
-            synonymeText += word.getSynonyme();
-        }
-
-        String onomatopoeiaRepeted = "";
-
-        for (Word word : onomatopoeiaList) {
-            onomatopoeiaRepeted += word.word + ": " + word.iteration + "\n";
-        }*/
-
         this.nbWords = 0;
-        speechResult = "Ce n’est pas cet amphithéâtre qui fait que La Sorbonne heu existe. Si elle vit aujourd’hui, heu c’est de l’idée que ses professeurs et ses élèves se font du savoir : une idée dont la vigueur a déjà traversé huit siècles. L’Europe aussi est une idée. Une idée portée depuis des siècles par des pionniers, des optimistes, des visionnaires, et que sans cesse, il nous appartient de nous réapproprier. Car les plus belles idées, celles qui nous font avancer, qui améliorent le sort des hommes sont toujours fragiles. Et l’Europe ne vivra que par l’idée que nous nous en faisons. A nous de la vivifier, de la rendre toujours plus belle et plus forte, de ne pas nous laisser arrêter par la forme que lui donnent les circonstances historiques. Car cette forme passe, mais l’idée demeure, et son ambition doit être la nôtre.\n" +
-                "Vivre collégialement, heu c’était l’idéal de Robert de SORBON. Et de partout affluaient les intellectuels et les érudits qui allaient forger la pensée européenne. A travers les guerres et les crises, à travers toutes ces péripéties de l’Histoire qui ont frappé l’Europe, cette pensée n’a cessé de grandir, de rayonner. Et là où le chaos aurait pu triompher, la civilisation, toujours, l’a emporté.\n" +
-                "Nous sommes les héritiers de toute bah cette histoire. Nous sommes heu les bah héritiers de deux déflagrations bah qui auraient dû jeter la nuit sur notre Europe, celles du siècle passé, des deux guerres mondiales qui ont décimé l’Europe et auraient pu nous engloutir. Mais ensemble, nous avons surmonté l’épreuve sans jamais en oublier les leçons. L’idée a triomphé des ruines. Le désir de fraternité a été plus fort que la vengeance et la haine.";
         Intent intent = new Intent(getBaseContext(), ResultActivity.class);
-        //intent.putExtra("ParseText", (Serializable) parseText);
         intent.putExtra("speechResult", speechResult);
         intent.putExtra("totalTime", totalTime);
-        //intent.putExtra("list", list);
-        /*intent.putExtra("onomatopoeiaList", onomatopoeiaList);*/
-        //intent.putExtra("wordsPerMinute", wordsPerMinute);
         startActivity(intent);
     }
 
@@ -165,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
             isRecording = false;
 
-            finish();
+            finishReconizer();
 
             Log.d("before result activity", "" + speechResult);
            // speechResult = "Permettez-moi euh euh euh d’abord, avant euh ben toute chose, cet après-midi, d’avoir ben une pensée pour nos deux compatriotes qui ont été lâchement assassinées hier à Marseille. Il est encore trop tôt pour qualifier avec la certitude requise ce qui s’est passé et le ministre de l’Intérieur aura à le faire dans les prochaines heures. Et d’avoir dans le même temps, puisque nous sommes ici plongés au cœur du vaste monde à travers votre représentation, une pensée également émue pour nos amis américains qui ont eu à subir, eux aussi, la violence contemporaine à Las Vegas, il y a quelques heures.";
@@ -204,11 +192,9 @@ public class MainActivity extends AppCompatActivity {
         return myText.replaceAll("[-+.^:,]", "");
     }
 
-    @Override
-    public void finish() {
-        System.out.println("Enter in finish");
+    public void finishReconizer() {
+        System.out.println("Enter in finishReconizer");
         speechRecognizer.destroy();
-        //super.finish();
     }
 
     class listener implements RecognitionListener {
@@ -243,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if (error == 8) {
                 Log.d(TAG,  "ENTER ERROR 8");
-                finish();
+                finishReconizer();
                 startRecording();
             }
         }
@@ -258,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 speechRecognizer.startListening(intent);
             }
             else {
-                finish();
+                finishReconizer();
             }
         }
         public void onPartialResults(Bundle partialResults)
@@ -294,6 +280,15 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.d(TAG, "onEvent " + eventType);
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if((contentDrawer).getChildCount() > 0){
+            (contentDrawer).removeAllViews();
+        }
+        listHistoric();
     }
 
 }
