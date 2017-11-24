@@ -289,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
             (contentDrawer).removeAllViews();
         }
         listHistoric();
+        speechResult = "";
     }
 
 }

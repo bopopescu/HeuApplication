@@ -64,13 +64,12 @@ public class ParseText {
     **   Get the number of word per minute
     */
     public int wordsPerMinute() {
+        float var = (float)getNbWord() / (float)this.duration;
 
-        int wordsPerMinute = (int)((float)(getNbWord() / this.duration)) * 60;
-        Log.d("words per minutes", "" + wordsPerMinute);
+        int result = (int)(var * 60);
 
-        return wordsPerMinute;
+        return result;
     }
-
     /*
     **   Fill the table which contains words and their iteration
     */
